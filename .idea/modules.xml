@@ -2,12 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/Day7_MiniAssignment/Day7_MiniAssignment.iml" filepath="$PROJECT_DIR$/Day7_MiniAssignment/Day7_MiniAssignment.iml" />
       <module fileurl="file://$PROJECT_DIR$/FinconsTraining.iml" filepath="$PROJECT_DIR$/FinconsTraining.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Task1_Day4/Task1_Day4.iml" filepath="$PROJECT_DIR$/Task1_Day4/Task1_Day4.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Task1_Day5/Task1_Day5.iml" filepath="$PROJECT_DIR$/Task1_Day5/Task1_Day5.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Task2Day4/Task2Day4.iml" filepath="$PROJECT_DIR$/Task2Day4/Task2Day4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Day4_Task1/Task1_Day4.iml" filepath="$PROJECT_DIR$/Day4_Task1/Task1_Day4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Day5_Task1/Task1_Day5.iml" filepath="$PROJECT_DIR$/Day5_Task1/Task1_Day5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Day4_Task2/Task2Day4.iml" filepath="$PROJECT_DIR$/Day4_Task2/Task2Day4.iml" />
       <module fileurl="file://$PROJECT_DIR$/Tsk2_Day4/Task2_Da4.iml" filepath="$PROJECT_DIR$/Tsk2_Day4/Task2_Da4.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Task2_Day5/Task2_Day5.iml" filepath="$PROJECT_DIR$/Task2_Day5/Task2_Day5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Day5_Task2/Task2_Day5.iml" filepath="$PROJECT_DIR$/Day5_Task2/Task2_Day5.iml" />
     </modules>
   </component>
 </project>
