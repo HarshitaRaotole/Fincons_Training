@@ -1,0 +1,11 @@
+.form-box {
+  max-width: 450px;
+  padding: 20px;
+  margin: auto;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
