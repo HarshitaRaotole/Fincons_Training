@@ -156,7 +156,6 @@ spring.jpa.hibernate.ddl-auto=update
 ## 👩‍💻 Author
 
 **Harshita Raotole**
-MCA Student – VESIT, Mumbai
 Skills: Java, SQL, Spring Boot, Angular, MERN Stack
 
 ---
