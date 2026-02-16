@@ -303,7 +303,6 @@ http://localhost:4200
 # 👩‍💻 Author
 
 Harshita Raotole
-MCA Student – VESIT Mumbai
 
 Skills:
 
