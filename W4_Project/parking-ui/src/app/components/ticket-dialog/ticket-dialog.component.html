@@ -1,0 +1,35 @@
+<div class="ticket-container">
+  <div class="ticket-header">
+    <mat-icon>local_parking</mat-icon>
+    <h2>ENTRY TICKET</h2>
+  </div>
+  
+  <mat-divider></mat-divider>
+
+  <div class="ticket-body">
+    <div class="row">
+      <span class="label">Ticket ID</span>
+      <span class="value">#{{ data.id }}</span>
+    </div>
+    <div class="row">
+      <span class="label">Vehicle No</span>
+      <span class="value">{{ data.vehicleNumber || data.vehicle?.vehicleNumber }}</span>
+    </div>
+    <div class="row">
+      <span class="label">Slot Assigned</span>
+      <span class="value badge">{{ data.slotNumber || data.parkingSlot?.slotNumber }}</span>
+    </div>
+    <div class="row">
+      <span class="label">Entry Time</span>
+      <span class="value">{{ data.entryTime | date:'shortTime' }}</span>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <div class="ticket-footer">
+    <p>Please keep this ticket for exit.</p>
+    <!-- ⭐ CHANGED: Removed Print, just Close -->
+    <button mat-raised-button color="primary" (click)="close()">Done</button>
+  </div>
+</div>
