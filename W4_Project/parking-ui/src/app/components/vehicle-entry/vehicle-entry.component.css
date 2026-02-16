@@ -1,11 +1,98 @@
-.form-box {
-  max-width: 450px;
-  padding: 20px;
-  margin: auto;
+/* Header (Same as other pages) */
+.page-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
 }
+.page-title {
+  font-size: 26px;
+  color: #3f51b5;
+  border-left: 5px solid #3f51b5; /* Indigo Accent */
+  padding-left: 12px;
+  margin: 0;
+}
+.subtitle { color: #888; font-size: 13px; margin-left: 17px; }
 
-body {
+/* Layout */
+.content-wrapper {
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+}
+
+/* Form Card Styling */
+.entry-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.error-banner {
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+
+/* Digital Ticket Styling */
+.ticket-container {
+  display: flex;
+  justify-content: center;
+  animation: slideIn 0.3s ease-out;
+}
+
+.ticket-card {
+  width: 350px;
+  background: #fdfdfd;
+  border-top: 5px solid #4caf50; /* Green Top */
+}
+
+.ticket-header {
+  text-align: center;
+  padding: 15px;
+  color: #2e7d32;
+}
+
+.ticket-body {
+  padding: 20px;
+}
+
+.ticket-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 15px;
+}
+
+.slot-badge {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.ticket-actions {
+  padding: 15px;
+  text-align: center;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }

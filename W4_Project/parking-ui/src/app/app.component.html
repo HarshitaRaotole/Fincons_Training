@@ -1,11 +1,48 @@
-<header><h2>Parking Lot System</h2></header>
-<nav>
-  <ul>
-    <li><a routerLink="/lots" routerLinkActive="active-link">Parking Lots</a></li>
-    <li><a routerLink="/entry" routerLinkActive="active-link">Vehicle Entry</a></li>
-    <li><a routerLink="/active" routerLinkActive="active-link">Active Sessions</a></li>
-    <li><a routerLink="/exit" routerLinkActive="active-link">Vehicle Exit</a></li>
-    <li><a routerLink="/history" routerLinkActive="active-link">Parking History</a></li>
-  </ul>
+<!-- Professional Navigation Bar -->
+<mat-toolbar color="primary" class="app-header mat-elevation-z6">
+  
+  <!-- Brand / Logo Area -->
+  <button mat-icon-button class="brand-icon">
+    <mat-icon>local_parking</mat-icon>
+  </button>
+  <span class="brand-name">Parking System</span>
+
+  <!-- Spacer to push links to the right -->
+  <span class="spacer"></span>
+
+  <!-- Navigation Links -->
+  <nav class="nav-links">
+    
+  <a mat-button routerLink="/lots" routerLinkActive="active-link">
+    <mat-icon>domain</mat-icon> 
+    Parking Lots
+  </a>
+
+  <a mat-button routerLink="/entry" routerLinkActive="active-link">
+    <mat-icon>directions_car</mat-icon> 
+    Entry
+  </a>
+
+  <a mat-button routerLink="/active" routerLinkActive="active-link">
+    <mat-icon>timelapse</mat-icon> 
+    Active Sessions
+  </a>
+
+  <a mat-button routerLink="/exit" routerLinkActive="active-link">
+    <mat-icon>exit_to_app</mat-icon> 
+    Exit
+  </a>
+
+  <a mat-button routerLink="/history" routerLinkActive="active-link">
+    <mat-icon>history</mat-icon> 
+    History
+  </a>
+
 </nav>
-<router-outlet></router-outlet>
+
+</mat-toolbar>
+
+<!-- Main Content Area with Padding -->
+<div class="main-content">
+  <router-outlet></router-outlet>
+</div>

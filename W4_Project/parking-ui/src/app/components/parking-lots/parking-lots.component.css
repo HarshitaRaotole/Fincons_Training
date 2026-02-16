@@ -1,0 +1,14 @@
+.full-width-table {
+  width: 100%;
+}
+
+.mat-elevation-z8 {
+  overflow: hidden; /* Rounds corners correctly */
+  border-radius: 8px;
+}
+
+th.mat-header-cell {
+  background-color: #f5f5f5; /* Light grey header */
+  font-weight: bold;
+  font-size: 14px;
+}

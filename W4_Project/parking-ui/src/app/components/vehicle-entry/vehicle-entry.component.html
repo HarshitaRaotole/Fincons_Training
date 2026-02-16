@@ -1,1 +1,53 @@
-<p>vehicle-entry works!</p>
+<div class="container">
+  
+  <div class="page-header">
+    <div class="title-group">
+      <h2 class="page-title" style="border-color: #3f51b5;">Vehicle Entry</h2>
+      <span class="subtitle">Generate a new parking ticket</span>
+    </div>
+  </div>
+
+  <div class="d-flex justify-content-center">
+    
+    <!-- Form Card -->
+    <mat-card class="form-card" *ngIf="!successSession">
+      <h3 style="margin-top: 0; color: #444; margin-bottom: 20px;">New Entry Details</h3>
+
+      <!-- Error Banner -->
+      <div class="error-banner" *ngIf="errorMessage">
+        <mat-icon>error_outline</mat-icon> {{ errorMessage }}
+      </div>
+
+      <form #entryForm="ngForm" (ngSubmit)="onEnter(entryForm)">
+        
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Select Parking Lot</mat-label>
+          <mat-select [(ngModel)]="lotId" name="lotId" required>
+            <mat-option *ngFor="let lot of lots" [value]="lot.id">{{ lot.name }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Vehicle Number</mat-label>
+          <input matInput [(ngModel)]="vNum" name="vNum" required placeholder="MH-12-AB-1234" pattern="^[A-Z]{2}.*">
+          <mat-icon matSuffix>directions_car</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-label>Vehicle Type</mat-label>
+          <mat-select [(ngModel)]="vType" name="vType" required>
+            <mat-option value="CAR">Car</mat-option>
+            <mat-option value="BIKE">Bike</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <div style="margin-top: 10px;">
+          <button mat-raised-button color="primary" class="action-btn" type="submit" [disabled]="entryForm.invalid">
+            Generate Ticket
+          </button>
+        </div>
+      </form>
+    </mat-card>
+
+  </div>
+</div>

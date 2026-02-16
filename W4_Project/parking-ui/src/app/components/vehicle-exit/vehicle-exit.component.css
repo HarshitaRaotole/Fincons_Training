@@ -1,0 +1,192 @@
+/* -------------------------------------------------------------------------- */
+/*                                HEADER STYLES                               */
+/* -------------------------------------------------------------------------- */
+.page-header {
+  border-bottom: 1px solid #eee;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+}
+
+.page-title {
+  font-size: 26px;
+  color: #3f51b5;
+  border-left: 5px solid #f44336; /* Red Accent for Exit */
+  padding-left: 12px;
+  margin: 0;
+}
+
+.subtitle {
+  color: #888;
+  font-size: 13px;
+  margin-left: 17px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                FORM LAYOUT                                 */
+/* -------------------------------------------------------------------------- */
+.content-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Aligns items to top */
+  min-height: 60vh;
+}
+
+/* Exit Form Card */
+.exit-card {
+  width: 100%;
+  max-width: 450px;
+  padding: 20px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.submit-btn {
+  width: 100%;
+  height: 48px;
+  font-size: 16px;
+  margin-top: 10px;
+}
+
+.error-banner {
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                             RECEIPT STYLING                                */
+/* -------------------------------------------------------------------------- */
+.receipt-container {
+  animation: fadeInUp 0.4s ease-out;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.receipt-paper {
+  background: #fff;
+  width: 320px;
+  padding: 20px;
+  text-align: center;
+  border-top: 5px solid #333; /* Dark top like a POS machine */
+  position: relative;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1); /* Drop shadow */
+}
+
+/* Zig-zag bottom effect */
+.receipt-paper::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: radial-gradient(circle, transparent 70%, #fff 75%) 0 0 / 10px 10px;
+  background-repeat: repeat-x;
+  transform: rotate(180deg);
+}
+
+.receipt-header h3 {
+  margin: 0;
+  letter-spacing: 2px;
+  color: #333;
+  font-weight: 700;
+}
+
+.receipt-header p {
+  margin: 5px 0 0;
+  font-size: 12px;
+  color: #777;
+  text-transform: uppercase;
+}
+
+.dashed-line {
+  border-bottom: 2px dashed #ddd;
+  margin: 15px 0;
+}
+
+.receipt-body {
+  padding: 10px 0;
+}
+
+/* ⭐ UPDATED: Changed from .row to .receipt-row to avoid Bootstrap conflict */
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+  font-size: 14px;
+  color: #444;
+}
+
+.receipt-row strong {
+  color: #000;
+}
+
+.receipt-total {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 4px;
+  margin-top: 10px;
+}
+
+.receipt-total span {
+  font-size: 11px;
+  font-weight: bold;
+  color: #777;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: block;
+}
+
+.amount {
+  margin: 5px 0 0;
+  color: #2e7d32; /* Money Green */
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.receipt-footer {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 10px;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* -------------------------------------------------------------------------- */
+/*                               PRINT STYLES                                 */
+/* -------------------------------------------------------------------------- */
+/* This hides everything else when the user clicks Print */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .receipt-container, .receipt-container * {
+    visibility: visible;
+  }
+  .receipt-container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    box-shadow: none; /* No shadow on paper */
+  }
+  .receipt-footer {
+    display: none; /* Don't print the buttons */
+  }
+}

@@ -1,132 +1,92 @@
 import { Component, OnInit } from '@angular/core';
 import { ParkingService } from '../../services/parking.service';
 import { ParkingLot, ParkingSession } from '../../models/parking';
+// Import Material components
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TicketDialogComponent } from '../ticket-dialog/ticket-dialog.component';
 
 @Component({
   selector: 'app-vehicle-entry',
   standalone: false,
-  template: `
-    <div class="form-box">
-      <h3>Vehicle Entry</h3>
-
-      <!-- Show success details after successful parking -->
-      <div *ngIf="successSession" class="success-msg">
-        <strong>Success!</strong><br>
-        Ticket ID: {{ successSession.id }}<br>
-        Slot Assigned: {{ successSession.slotNumber || successSession.parkingSlot?.slotNumber }}
-      </div>
-
-      <!-- Show backend error message -->
-      <div *ngIf="errorMessage" class="error-msg">
-        {{ errorMessage }}
-      </div>
-
-      <form #entryForm="ngForm" (ngSubmit)="onEnter(entryForm)">
-
-        <!-- Parking Lot Selection -->
-        <div class="form-group">
-          <label>Select Parking Lot:</label>
-          <select [(ngModel)]="lotId" name="lotId" required>
-            <option value="" disabled>-- Select Lot --</option>
-            <option *ngFor="let lot of lots" [value]="lot.id">
-              {{ lot.name }}
-            </option>
-          </select>
-        </div>
-
-        <!-- Vehicle Number Input -->
-        <div class="form-group">
-          <label>Vehicle Number:</label>
-          <input
-            type="text"
-            name="vNum"
-            [(ngModel)]="vNum"
-            #vehicleNum="ngModel"
-            required
-            pattern="^[A-Z]{2}-?\\d{2}-?[A-Z]{1,2}-?\\d{4}$"
-            placeholder="MH-12-AB-1234"
-          />
-
-          <!-- Validation messages -->
-          <div class="error-msg"
-               *ngIf="vehicleNum.invalid && entryForm.submitted">
-            <small *ngIf="vehicleNum.errors?.['required']">
-              Vehicle number is required
-            </small>
-            <small *ngIf="vehicleNum.errors?.['pattern']">
-              Enter a valid vehicle number (e.g. MH-12-AB-1234)
-            </small>
-          </div>
-        </div>
-
-        <!-- Vehicle Type Selection -->
-        <div class="form-group">
-          <label>Vehicle Type:</label>
-          <select [(ngModel)]="vType" name="vType" required>
-            <option value="" disabled>-- Select Type --</option>
-            <option value="CAR">CAR</option>
-            <option value="BIKE">BIKE</option>
-          </select>
-        </div>
-
-        <button type="submit">Park Vehicle</button>
-      </form>
-    </div>
-  `
+  templateUrl: './vehicle-entry.component.html',
+  styleUrls: ['./vehicle-entry.component.css']
 })
 export class VehicleEntryComponent implements OnInit {
 
-  // Parking lots fetched from backend
+  // Data for Dropdown
   lots: ParkingLot[] = [];
 
-  // Form fields
+  // Form Inputs
   lotId: number | null = null;
   vNum: string = '';
   vType: string | null = null;
 
-  // UI state messages
+  // ⭐ FIX: Define these variables so HTML doesn't crash
   successSession: ParkingSession | null = null;
   errorMessage: string = '';
 
-  // Inject ParkingService
-  constructor(private service: ParkingService) {}
+  constructor(
+    private service: ParkingService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
+  ) {}
 
-  // Load parking lots on page load
   ngOnInit() {
-    this.service.getParkingLots().subscribe(data => {
-      this.lots = data;
+    // Load lots for the dropdown
+    this.service.getParkingLots(0, 100, '').subscribe(res => {
+      this.lots = res.content;
     });
   }
 
-  // Handle vehicle entry submission
   onEnter(form: any) {
-    this.successSession = null;
-    this.errorMessage = '';
+    this.errorMessage = ''; // Clear previous errors
 
-    // Stop submission if form is invalid
-    if (form.invalid) {
-      return;
-    }
+    if (form.invalid) return;
 
     this.service.enterVehicle(this.lotId!, this.vNum, this.vType!).subscribe({
       next: (res) => {
-        this.successSession = res;
+        this.successSession = res; // Save session details
 
-        // Reset form after successful entry
-        form.resetForm({
-          lotId: null,
-          vNum: '',
-          vType: null
+        // 1. Show Success Toast
+        this.snackBar.open('Vehicle Parked Successfully!', 'OK', {
+          duration: 3000,
+          panelClass: ['success-snackbar'],
+          horizontalPosition: 'right',
+          verticalPosition: 'top'
         });
+
+        // 2. Open Ticket Dialog
+        this.dialog.open(TicketDialogComponent, {
+          width: '350px',
+          data: res,
+          disableClose: true
+        });
+
+        // 3. Reset Form
+        form.resetForm();
+        this.vType = null;
+        this.successSession = null; // Reset this so form stays visible
       },
       error: (err) => {
-        // Handle plain text or JSON error from backend
-        if (typeof err.error === 'string') {
-          this.errorMessage = err.error;
-        } else if (err.error?.message) {
-          this.errorMessage = err.error.message;
-        }
-      }
+
+  // Handle both plain text and JSON errors
+  if (typeof err.error === 'string') {
+    this.errorMessage = err.error;
+  } else if (err.error?.message) {
+    this.errorMessage = err.error.message;
+  } else {
+    this.errorMessage = "Entry failed. Please check inputs.";
+  }
+
+  this.snackBar.open(this.errorMessage, 'Close', {
+    duration: 4000,
+    panelClass: ['error-snackbar'],
+    verticalPosition: 'top'
+  });
+
+}
+
     });
   }
 }

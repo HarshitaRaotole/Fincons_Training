@@ -1,3 +1,13 @@
+export interface Page<T> {
+  content: T[];          // The actual list of data
+  totalPages: number;    // Total number of pages
+  totalElements: number; // Total rows in DB
+  number: number;        // Current page number (0-based)
+  size: number;          // Page size
+  first: boolean;
+  last: boolean;
+}
+
 export interface ParkingLot {
   // Core parking lot fields
   id: number;
@@ -40,9 +50,7 @@ export interface ParkingSession {
   // Session timing and billing details
   entryTime: string;
   exitTime?: string;
-  duration?: string;
-  occupancyMultiplier?: number;
-  basePrice?: number;
+
   totalAmount?: number;
 
   // Current session status

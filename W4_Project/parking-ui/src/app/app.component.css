@@ -1,0 +1,67 @@
+/* 1. Header Container - Professional White Look */
+.app-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  height: 64px;
+  background-color: #a6d5f7; /* White Background */
+  color: #333; /* Dark Text */
+  border-bottom: 1px solid #e0e0e0; /* Subtle grey line at bottom */
+}
+
+/* 2. Brand Name Styling */
+.brand-name {
+  font-weight: 600;
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+  margin-left: 8px;
+  color: #3f51b5; /* Indigo color for the Brand Name only */
+}
+
+.brand-icon {
+  color: #3f51b5; /* Indigo Icon */
+}
+
+/* 3. Spacer pushes links to the right */
+.spacer {
+  flex: 1 1 auto;
+}
+
+/* 4. Navigation Links Styling */
+.nav-links a {
+  font-size: 14px;  
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-left: 8px;
+  color: #666; /* Dark Grey text - clearly visible on white */
+  transition: all 0.3s ease;
+  border-radius: 4px; /* Rounded corners for buttons */
+}
+
+/* Icon spacing inside buttons */
+.nav-links mat-icon {
+  margin-right: 6px;
+  font-size: 20px;
+  vertical-align: middle;
+  padding-bottom: 2px;
+}
+
+/* 5. Hover Effect (Light Grey Background) */
+.nav-links a:hover {
+  background-color: #a4deeb; /* Light grey hover */
+  color: #3f51b5; /* Text turns blue on hover */
+}
+
+/* 6. Active Page Highlight (The "Selected" Tab) */
+.active-link {
+  background-color: #e8eaf6 !important; /* Very light blue background */
+  color: #3f51b5 !important; /* Indigo text */
+  font-weight: 700 !important;
+}
+
+/* 7. Main Content Area */
+.main-content {
+  padding: 20px;
+  background-color: #fafafa; /* Very light grey background for page */
+  min-height: calc(100vh - 64px);
+}
