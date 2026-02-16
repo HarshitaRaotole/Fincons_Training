@@ -8,6 +8,7 @@ import com.example.parking_management.model.ParkingSlot;
 import com.example.parking_management.service.ParkingService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,8 +28,12 @@ public class ParkingController {
 
     // Get all parking lots
     @GetMapping("/parking-lots")
-    public ResponseEntity<List<ParkingLot>> getLots(){
-        return ResponseEntity.ok(service.getAllLots());
+    public ResponseEntity<Page<ParkingLot>> getLots(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+           @RequestParam(required = false) String keyword
+    ){
+        return ResponseEntity.ok(service.getAllLots(page, size, keyword));
     }
 
     // Handle vehicle entry and create parking session
@@ -44,8 +49,12 @@ public class ParkingController {
     }
 
     @GetMapping("/sessions/active")
-    public ResponseEntity<List<ParkingSession>> getActiveSessions(){
-        return ResponseEntity.ok(service.getActiveSessions());
+    public ResponseEntity<Page<ParkingSession>> getActiveSessions(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword
+    ){
+        return ResponseEntity.ok(service.getActiveSessions(page, size, keyword));
     }
 
     // Get currently active parking sessions
@@ -56,10 +65,11 @@ public class ParkingController {
 
     // Get parking session history
     @GetMapping("/sessions/history")
-    public ResponseEntity<List<ParkingSession>> getSessionHistory(){
-        return ResponseEntity.ok(service.getSessionHistory());
+    public ResponseEntity<Page<ParkingSession>> getSessionHistory(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(required = false) String keyword
+    ){
+        return ResponseEntity.ok(service.getSessionHistory(page, size, keyword));
     }
-
-
-
 }

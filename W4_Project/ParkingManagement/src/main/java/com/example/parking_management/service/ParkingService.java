@@ -11,6 +11,10 @@ import com.example.parking_management.repository.VehicleRepository;
 import jakarta.transaction.Transactional;
 import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -24,6 +28,7 @@ public class ParkingService {
     @Autowired private ParkingSlotRepository slotRepo;
     @Autowired private VehicleRepository vehicleRepo;
     @Autowired private ParkingSessionRepository sessionRepo;
+    @Autowired private ParkingEventProducer eventProducer;
 
     // Create parking lot and initialize slots
     public ParkingLot createParkingLot(ParkingLot lot){
@@ -38,10 +43,17 @@ public class ParkingService {
         }
         return savedLot;
     }
-    // Fetch all parking lots
-    public List<ParkingLot> getAllLots(){
-        return lotRepo.findAll();
+    // Fetch all parking lots(Paginated)
+    public Page<ParkingLot> getAllLots(int pageNo, int pageSize, String keyword){
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("id").ascending());
+
+        if (keyword != null && !keyword.isEmpty()) {
+            return lotRepo.findByNameContainingIgnoreCaseOrLocationContainingIgnoreCase(keyword, keyword, pageable);
+        }
+        return lotRepo.findAll(pageable);
+
     }
+
 
     //Vehicle Entry logic
     @Transactional
@@ -99,26 +111,39 @@ public class ParkingService {
         session.setEntryTime(LocalDateTime.now());
         session.setStatus(SessionStatus.ACTIVE);
 
-        return sessionRepo.save(session);
+        ParkingSession savedSession = sessionRepo.save(session);
+
+        // KAFKA EVENT: Sending a formatted string for the Frontend
+        String eventMessage = "ENTRY: Vehicle " + savedSession.getVehicle().getVehicleNumber() +
+                " entered Slot " + slot.getSlotNumber();
+        eventProducer.sendEvent(eventMessage);
+
+        return savedSession;
     }
 
     // Vehicle exit logic
     @Transactional
     public ParkingSession exitVehicle(ExitRequestDto request){
         ParkingSession session = sessionRepo.findByVehicle_VehicleNumberAndStatus(request.getVehicleNumber(),
-                SessionStatus.ACTIVE)
-                .orElseThrow(()-> new ParkingException("No Active Session found for this vehicle"));
-        session.setExitTime(LocalDateTime.now());
+                        SessionStatus.ACTIVE)
+                .orElseThrow(() -> new ParkingException("No Active Session found for this vehicle"));
 
-        //pricing Logic
-        calculateCharges(session);
+        session.setExitTime(LocalDateTime.now());
+        calculateCharges(session); // Logic for dynamic pricing
         session.setStatus(SessionStatus.COMPLETED);
+
         ParkingSlot slot = session.getParkingSlot();
         slot.setStatus(SlotStatus.AVAILABLE);
         slotRepo.save(slot);
 
-        return sessionRepo.save(session);
+        ParkingSession savedSession = sessionRepo.save(session);
 
+        // KAFKA EVENT: Sending exit details
+        String eventMessage = "EXIT: Vehicle " + savedSession.getVehicle().getVehicleNumber() +
+                " exited. Charges: ₹" + savedSession.getTotalAmount();
+        eventProducer.sendEvent(eventMessage);
+
+        return savedSession;
     }
 
     // Pricing calculation based on duration and occupancy
@@ -153,23 +178,32 @@ public class ParkingService {
         session.setTotalAmount(finalAmount);
     }
 
-    // Fetch active parking sessions
-    public List<ParkingSession> getActiveSessions(){
+    // Fetch active parking sessions(paginated)
+    public Page<ParkingSession> getActiveSessions(int pageNo, int pageSize, String keyword){
+        //sort by EntryTime DESC
+        Pageable pageable = PageRequest.of(pageNo, pageSize,Sort.by("entryTime").descending());
+        if (keyword != null && !keyword.isEmpty()){
+            return sessionRepo.findByStatusAndVehicle_VehicleNumberContainingIgnoreCase(
+                    SessionStatus.ACTIVE, keyword, pageable
+            );
+        }
 
-        return sessionRepo.findByStatus(SessionStatus.ACTIVE);
+        return sessionRepo.findByStatus(SessionStatus.ACTIVE,pageable);
     }
+    // History with pagination
+    public Page<ParkingSession> getSessionHistory(int pageNo, int pageSize, String keyword){
+        //sort by ID Descending(Latest record first)
+        Pageable pageable = PageRequest.of(pageNo, pageSize, Sort.by("id").descending());
+        if (keyword != null && !keyword.isEmpty()){
+            return sessionRepo.findByVehicle_VehicleNumberContainingIgnoreCase(keyword,pageable);
+        }
+        return sessionRepo.findAll(pageable);
 
-    // Fetch slots for a parking lot
+    }
     public List<ParkingSlot> getSlotsForLot(Long lotId){
         if(!lotRepo.existsById(lotId)){
             throw new ParkingException("Parking Lot not found");
         }
         return slotRepo.findByParkingLotId(lotId);
     }
-
-    // Fetch parking session history
-    public List<ParkingSession> getSessionHistory(){
-        return sessionRepo.findAll();
-    }
-
 }
