@@ -1,113 +1,148 @@
-body { font-family: sans-serif; margin: 20px; line-height: 1.6; }
-
-/* Nav */
-nav { background-color: #f4f4f4; border-bottom: 2px solid #ccc; padding: 10px; margin-bottom: 20px; }
-nav ul { list-style: none; padding: 0; margin: 0; }
-nav li { display: inline; margin-right: 15px; }
-nav a { text-decoration: none; color: #333; font-weight: bold; padding: 5px 10px; }
-nav a.active-link { background-color: #333; color: #fff; border-radius: 4px; }
-
-/* Tables */
-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-th, td { border: 1px solid #999; padding: 8px; text-align: left; }
-th { background-color: #eee; }
-
-/* Forms */
-/* Forms */
-.form-box {
-  border: 1px solid #ccc;
-  padding: 20px;
-  width: 400px;
-
-  
-  margin: 40px auto;      
-  background-color: #fff; 
+/* -------------------------------------------------------------------------- */
+/*                 GLOBAL THEME & TYPOGRAPHY                                  */
+/* -------------------------------------------------------------------------- */
+html, body { height: 100%; }
+body { 
+  margin: 0; 
+  font-family: 'Roboto', "Helvetica Neue", sans-serif; 
+  background-color: #f0f2f5; /* Enterprise Light Grey */
+  color: #1c1e21;
 }
 
-.form-group {
-  margin-bottom: 15px;
+/* Standard Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 30px;
 }
 
-label {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+/* -------------------------------------------------------------------------- */
+/*                 UNIFIED PAGE HEADERS                                       */
+/* -------------------------------------------------------------------------- */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  background: transparent;
 }
 
-input, select {
+.title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 500;
+  color: #1a237e; /* Deep Indigo */
+  margin: 0;
+  border-left: 6px solid #3f51b5; /* Accent Bar */
+  padding-left: 16px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: #5f6368;
+  margin-left: 22px; /* Align with text */
+  margin-top: 4px;
+}
+
+/* Search Bar Wrapper */
+.search-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* -------------------------------------------------------------------------- */
+/*                 DATA TABLES (Material Override)                            */
+/* -------------------------------------------------------------------------- */
+.table-container {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06); /* Soft Shadow */
+}
+
+table.mat-table {
   width: 100%;
-  padding: 8px;
-  box-sizing: border-box;
 }
 
-button {
-  padding: 10px 20px;
-  background-color: #ddd;
-  border: 1px solid #999;
-  cursor: pointer;
-  font-weight: bold;
+/* Header Cells */
+th.mat-header-cell {
+  background-color: #f8f9fa;
+  color: #444;
+  font-weight: 600;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 16px;
 }
 
-button:hover {
-  background-color: #ccc;
+/* Body Cells */
+td.mat-cell {
+  padding: 16px;
+  font-size: 14px;
+  color: #333;
+  border-bottom-color: #f0f0f0;
 }
 
-button:hover { background-color: #ccc; }
-
-/* Messages */
-.success-msg { color: green; background-color: #e6fffa; border: 1px solid green; padding: 10px; margin-bottom: 15px; }
-.error-msg { color: red; background-color: #ffe6e6; border: 1px solid red; padding: 10px; margin-bottom: 15px; }
-
-/* Receipt Box */
-.receipt-container {
-  display: flex;
-  justify-content: center;
-  margin-top: 30px;
+/* Row Hover Effect */
+tr.mat-row:hover {
+  background-color: #f5faff; /* Very light blue on hover */
+  cursor: default;
 }
 
-.receipt-box {
-  border: 3px solid black;
-  padding: 20px;
-  width: 400px;
-  background-color: #fff;
+/* -------------------------------------------------------------------------- */
+/*                 BADGES & STATUS LABELS                                     */
+/* -------------------------------------------------------------------------- */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  display: inline-block;
 }
 
-.receipt-header {
-  text-align: center;
-  border-bottom: 2px dashed #000;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  font-weight: bold;
-}
+.status-active { background-color: #e6f4ea; color: #1e8e3e; border: 1px solid #ceead6; }
+.status-completed { background-color: #f1f3f4; color: #5f6368; border: 1px solid #dadce0; }
 
-.receipt-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-}
-
-.receipt-total {
-  border-top: 2px solid #000;
-  margin-top: 10px;
-  padding-top: 10px;
-  font-weight: bold;
-  font-size: 1.2em;
-  display: flex;
-  justify-content: space-between;
-}
-
-.receipt-notes {
-  font-size: 0.85em;
-  color: #555;
-  margin-top: 15px;
-  font-style: italic;
-  text-align: center;
+.slot-badge {
+  background-color: #e8f0fe;
+  color: #1967d2;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
 }
 
 
-.exit-container {
-  display: flex;
-  flex-direction: column;   
-  align-items: center;      
-  gap: 30px;
+/*                 FORMS & CARDS                                              */
+
+.form-card {
+  background: white;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 500px; /* Perfect width for forms */
+  margin: 0 auto; /* Centering */
+}
+
+/* Remove default Mat-Card padding to control it ourselves */
+mat-card-content { margin-bottom: 0 !important; }
+
+/* Buttons */
+.action-btn {
+  height: 48px;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  width: 100%;
 }
