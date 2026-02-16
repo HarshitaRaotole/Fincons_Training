@@ -1,1 +1,81 @@
-<p>active-sessions works!</p>
+<div class="container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="title-group">
+      <h2 class="page-title" style="border-color: #00c853;">Active Sessions</h2>
+      <span class="subtitle">Live monitoring of parked vehicles</span>
+    </div>
+
+    <!-- Search -->
+    <div class="search-container">
+      <mat-form-field appearance="outline" style="width: 250px; font-size: 14px; margin-bottom: -1.25em">
+        <mat-label>Search Vehicle No</mat-label>
+        <input matInput [(ngModel)]="keyword" (keyup.enter)="onSearch()">
+        <button *ngIf="keyword" matSuffix mat-icon-button (click)="onReset()">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <button mat-flat-button color="primary" style="height: 50px; margin-left: 8px;" (click)="onSearch()">
+        Filter
+      </button>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container">
+    <table mat-table [dataSource]="sessions">
+      
+      <!-- Ticket ID -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Ticket ID </th>
+        <td mat-cell *matCellDef="let element"> #{{element.id}} </td>
+      </ng-container>
+
+      <!-- Vehicle -->
+      <ng-container matColumnDef="vehicleNumber">
+        <th mat-header-cell *matHeaderCellDef> Vehicle </th>
+        <td mat-cell *matCellDef="let element" style="font-weight: 500;"> 
+          {{element.vehicleNumber || element.vehicle?.vehicleNumber}} 
+        </td>
+      </ng-container>
+
+      <!-- Type -->
+      <ng-container matColumnDef="type">
+        <th mat-header-cell *matHeaderCellDef> Type </th>
+        <td mat-cell *matCellDef="let element"> 
+           <mat-icon style="font-size: 18px; vertical-align: middle; color: #777; margin-right: 5px;">
+             {{ (element.vehicleType || element.vehicle?.vehicleType) === 'CAR' ? 'directions_car' : 'two_wheeler' }}
+           </mat-icon>
+           {{element.vehicleType || element.vehicle?.vehicleType}}
+        </td>
+      </ng-container>
+
+      <!-- Slot -->
+      <ng-container matColumnDef="slotNumber">
+        <th mat-header-cell *matHeaderCellDef> Slot </th>
+        <td mat-cell *matCellDef="let element"> <span class="slot-badge">{{element.slotNumber || element.parkingSlot?.slotNumber}}</span> </td>
+      </ng-container>
+
+      <!-- Entry Time -->
+      <ng-container matColumnDef="entryTime">
+        <th mat-header-cell *matHeaderCellDef> Entry Time </th>
+        <td mat-cell *matCellDef="let element"> {{element.entryTime | date:'medium'}} </td>
+      </ng-container>
+
+      <!-- Status -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef> Status </th>
+        <td mat-cell *matCellDef="let element">
+          <span class="status-badge status-active">{{element.status}}</span>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" colspan="6" class="text-center p-4 text-muted">No active sessions.</td>
+      </tr>
+    </table>
+    <mat-paginator [length]="totalElements" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]" (page)="onPageChange($event)" showFirstLastButtons></mat-paginator>
+  </div>
+</div>

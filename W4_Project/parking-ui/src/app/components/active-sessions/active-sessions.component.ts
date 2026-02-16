@@ -1,55 +1,77 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core'; // 1. Import OnDestroy
 import { ParkingService } from '../../services/parking.service';
 import { ParkingSession } from '../../models/parking';
+import { PageEvent } from '@angular/material/paginator';
+import { WebSocketService } from '../../services/websocket.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-active-sessions',
+  templateUrl: './active-sessions.component.html',
   standalone: false,
-  template: `
-    <!-- Displays list of currently active parking sessions -->
-    <h3>Active Sessions</h3>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Ticket ID</th>
-          <th>Vehicle</th>
-          <th>Type</th>
-          <th>Slot</th>
-          <th>Entry Time</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <!-- Loop through active sessions -->
-        <tr *ngFor="let s of sessions">
-          <td>{{ s.id }}</td>
-          <td>{{ s.vehicleNumber || s.vehicle?.vehicleNumber }}</td>
-          <td>{{ s.vehicleType || s.vehicle?.vehicleType }}</td>
-          <td>{{ s.slotNumber || s.parkingSlot?.slotNumber }}</td>
-          <td>{{ s.entryTime | date:'medium' }}</td>
-          <td>{{ s.status }}</td>
-        </tr>
-
-        <!-- Show message when no active sessions are available -->
-        <tr *ngIf="sessions.length === 0">
-          <td colspan="6" style="text-align:center">No active vehicles.</td>
-        </tr>
-      </tbody>
-    </table>
-  `
+  styleUrls: ['./active-sessions.component.css']
 })
-export class ActiveSessionsComponent implements OnInit {
+// 2. Implement OnDestroy
+export class ActiveSessionsComponent implements OnInit, OnDestroy {
 
-  // Stores active parking sessions
+  displayedColumns: string[] = ['id', 'vehicleNumber', 'type', 'slotNumber', 'entryTime', 'status'];
   sessions: ParkingSession[] = [];
+  totalElements: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  keyword: string = '';
 
-  // Inject ParkingService to fetch data from backend
-  constructor(private service: ParkingService) {}
+  constructor(
+    private service: ParkingService,
+    private webSocketService: WebSocketService,
+    private snackBar: MatSnackBar
+  ) {}
 
-  // Load active sessions on component initialization
   ngOnInit() {
-    this.service.getActiveSessions().subscribe(d => this.sessions = d);
+    this.loadData();
+
+    // Connect to WebSocket
+    this.webSocketService.connect((message) => {
+      const updatedMessage = message.replace('$', '₹');
+      // Show Notification
+      this.snackBar.open(message, 'Close', {
+        duration: 3000,
+        verticalPosition: 'top',
+        horizontalPosition: 'right'
+      });
+
+      // Refresh Grid
+      this.loadData();
+    });
+  }
+
+  // 3. Disconnect when leaving the page to prevent memory leaks
+  ngOnDestroy() {
+    this.webSocketService.disconnect();
+  }
+
+  loadData() {
+    this.service.getActiveSessions(this.currentPage, this.pageSize, this.keyword)
+      .subscribe(response => {
+        this.sessions = response.content;
+        this.totalElements = response.totalElements;
+      });
+  }
+
+  
+  onSearch() {
+    this.currentPage = 0;
+    this.loadData();
+  }
+
+  onReset() {
+    this.keyword = '';
+    this.onSearch();
+  }
+
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadData();
   }
 }

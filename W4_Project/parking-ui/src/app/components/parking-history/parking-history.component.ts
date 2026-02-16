@@ -1,52 +1,55 @@
 import { Component, OnInit } from '@angular/core';
 import { ParkingService } from '../../services/parking.service';
 import { ParkingSession } from '../../models/parking';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-parking-history',
   standalone: false,
-  template: `
-    <!-- Displays completed and ongoing parking sessions -->
-    <h3>Parking History</h3>
-
-    <table>
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Vehicle</th>
-          <th>Slot</th>
-          <th>Entry</th>
-          <th>Exit</th>
-          <th>Amount</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        <!-- Loop through parking session history -->
-        <tr *ngFor="let s of sessions">
-          <td>{{ s.id }}</td>
-          <td>{{ s.vehicleNumber || s.vehicle?.vehicleNumber }}</td>
-          <td>{{ s.slotNumber || s.parkingSlot?.slotNumber }}</td>
-          <td>{{ s.entryTime | date:'short' }}</td>
-          <td>{{ s.exitTime ? (s.exitTime | date:'short') : 'In Progress' }}</td>
-          <td>{{ s.totalAmount }}</td>
-          <td>{{ s.status }}</td>
-        </tr>
-      </tbody>
-    </table>
-  `
+  templateUrl: './parking-history.component.html',
+  styleUrls: ['./parking-history.component.css']
 })
 export class ParkingHistoryComponent implements OnInit {
 
-  // Stores parking session history
+  //  Columns for Material Table
+  displayedColumns: string[] = ['id', 'vehicleNumber', 'slotNumber', 'entryTime', 'exitTime', 'amount', 'status'];
+
   sessions: ParkingSession[] = [];
 
-  // Inject ParkingService to fetch history data
+  // Pagination State
+  totalElements: number = 0;
+  currentPage: number = 0;
+  pageSize: number = 10;
+  keyword: string = '';
+
   constructor(private service: ParkingService) {}
 
-  // Load parking history on component initialization
   ngOnInit() {
-    this.service.getHistory().subscribe(d => this.sessions = d);
+    this.loadData();
+  }
+
+  loadData() {
+    this.service.getHistory(this.currentPage, this.pageSize, this.keyword)
+      .subscribe(response => {
+        this.sessions = response.content;
+        this.totalElements = response.totalElements; // Required for Paginator
+      });
+  }
+
+  onSearch() {
+    this.currentPage = 0;
+    this.loadData();
+  }
+
+  onReset() {
+    this.keyword = '';
+    this.onSearch();
+  }
+
+  // Handle Page Changes
+  onPageChange(event: PageEvent) {
+    this.currentPage = event.pageIndex;
+    this.pageSize = event.pageSize;
+    this.loadData();
   }
 }

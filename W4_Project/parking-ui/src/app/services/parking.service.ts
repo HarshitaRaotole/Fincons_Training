@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ParkingLot, ParkingSession } from '../models/parking';
+import { Page, ParkingLot, ParkingSession } from '../models/parking';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +15,14 @@ export class ParkingService {
   constructor(private http: HttpClient) { }
 
   // Fetch all parking lots
-  getParkingLots(): Observable<ParkingLot[]> {
-    return this.http.get<ParkingLot[]>(`${this.apiUrl}/parking-lots`);
+  getParkingLots(page: number, size: number, keyword: string): Observable<Page<ParkingLot>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+    
+    if (keyword) params = params.set('keyword', keyword);
+
+    return this.http.get<Page<ParkingLot>>(`${this.apiUrl}/parking-lots`, { params });
   }
 
   // Send vehicle entry request
@@ -40,12 +46,24 @@ export class ParkingService {
   }
 
   // Fetch active parking sessions
-  getActiveSessions(): Observable<ParkingSession[]> {
-    return this.http.get<ParkingSession[]>(`${this.apiUrl}/sessions/active`);
+  getActiveSessions(page: number, size: number, keyword: string): Observable<Page<ParkingSession>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    if (keyword) params = params.set('keyword', keyword);
+
+    return this.http.get<Page<ParkingSession>>(`${this.apiUrl}/sessions/active`, { params });
   }
 
   // Fetch complete parking history
-  getHistory(): Observable<ParkingSession[]> {
-    return this.http.get<ParkingSession[]>(`${this.apiUrl}/sessions/history`);
+  getHistory(page: number, size: number, keyword: string): Observable<Page<ParkingSession>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('size', size);
+
+    if (keyword) params = params.set('keyword', keyword);
+
+    return this.http.get<Page<ParkingSession>>(`${this.apiUrl}/sessions/history`, { params });
   }
 }
