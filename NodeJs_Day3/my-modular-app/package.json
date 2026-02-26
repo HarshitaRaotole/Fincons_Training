@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "lodash": "^4.17.23"
+  },
+  "name": "my-modular-app",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "start": "node app.js"
+  },
+  
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
